@@ -1,0 +1,8 @@
+Student ID,Incident Type,Timestamp (IST),Details
+admin,gaze_away,03/11/2025, 22:56:37,"Student looking away from screen"
+admin,no_face,03/11/2025, 22:56:58,"Student face not visible in frame"
+admin,no_face,03/11/2025, 22:57:21,"Student face not visible in frame"
+admin,tab_hidden,03/11/2025, 22:57:30,"Student switched to another tab/window"
+admin,gaze_away,03/11/2025, 22:57:51,"Student looking away from screen"
+admin,gaze_away,03/11/2025, 22:58:04,"Student looking away from screen"
+admin,no_face,03/11/2025, 22:58:27,"Student face not visible in frame"

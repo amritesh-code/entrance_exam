@@ -1,0 +1,6 @@
+Student ID,Incident Type,Timestamp (IST),Details
+admin,tab_hidden,31/10/2025, 20:31:42,"Student switched to another tab/window"
+admin,no_face,31/10/2025, 20:31:52,"Student face not visible in frame"
+admin,no_face,31/10/2025, 20:32:05,"Student face not visible in frame"
+admin,no_face,31/10/2025, 20:32:48,"Student face not visible in frame"
+admin,no_face,31/10/2025, 20:33:24,"Student face not visible in frame"

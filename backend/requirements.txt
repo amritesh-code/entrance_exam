@@ -1,0 +1,8 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+opencv-contrib-python==4.8.0.76
+mediapipe==0.10.14
+numpy==1.26.4
+pillow==10.2.0
+protobuf==4.25.3
