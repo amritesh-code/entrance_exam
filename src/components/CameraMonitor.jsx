@@ -120,7 +120,7 @@ export default function CameraMonitor({
     const schedule = () => { timer = setTimeout(takeShot, snapshotIntervalMs); };
     schedule();
     return () => clearTimeout(timer);
-  }, [active, snapshotIntervalMs, onSnapshot, onIncident]);
+  }, [active, snapshotIntervalMs, useBackend, backendUrl]);
 
   return (
     <div className="w-full">

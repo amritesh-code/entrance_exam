@@ -112,106 +112,145 @@ export default function SystemCheck({ onProceed, studentId }) {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-slate-900">System Check</h2>
-      <p className="text-slate-600">Please allow access to your camera and microphone to proceed.</p>
-      {!studentId && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded">
-          Warning: Student ID is missing. Please log in again.
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">System Check</h2>
+          <p className="text-gray-600">We need to verify your camera and microphone</p>
         </div>
-      )}
-      
-      <div className="space-y-3">
-        {Object.entries(checks).map(([key, { status, message }]) => (
-          <div key={key} className="flex items-center gap-3 p-3 border rounded-lg bg-slate-50">
-            <div className={`w-4 h-4 rounded-full ${
-              status === 'pass' ? 'bg-green-500' :
-              status === 'fail' ? 'bg-red-500' :
-              'bg-yellow-500 animate-pulse'
-            }`} />
-            <div className="flex-1">
-              <div className="font-medium text-slate-900 capitalize">{key}</div>
-              <div className="text-sm text-slate-600">{message}</div>
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {showFaceCapture && (
-        <div className="space-y-4 p-4 border-2 border-blue-200 rounded-lg bg-blue-50">
-          <h3 className="font-bold text-slate-900">Face Registration</h3>
-          <p className="text-sm text-slate-600">Position your face in the frame and capture</p>
-          
-          {capturedImage ? (
-            <img
-              src={capturedImage}
-              alt="Captured face"
-              className="w-full max-h-64 rounded-lg border-2 border-green-400 bg-black object-contain"
-            />
-          ) : (
-            <video
-              ref={videoRef}
-              playsInline
-              muted
-              className="w-full max-h-64 rounded-lg border-2 border-slate-300 bg-black"
-            />
-          )}
-          
-          <div className="flex items-center gap-3 p-3 border rounded-lg bg-white">
-            <div className={`w-4 h-4 rounded-full ${
-              faceCapture.status === 'captured' ? 'bg-green-500' :
-              faceCapture.status === 'error' ? 'bg-red-500' :
-              faceCapture.status === 'capturing' ? 'bg-yellow-500 animate-pulse' :
-              'bg-slate-400'
-            }`} />
-            <div className="flex-1">
-              <div className="text-sm text-slate-600">{faceCapture.message}</div>
-            </div>
+        {!studentId && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded">
+            <p className="font-semibold">⚠️ Warning: Student ID is missing. Please log in again.</p>
           </div>
-          
-          <div className="flex gap-2">
-            <button
-              onClick={captureFace}
-              disabled={faceCapture.status === 'capturing' || faceCapture.status === 'captured'}
-              className={`flex-1 py-2 px-4 rounded-lg font-bold transition ${
-                faceCapture.status === 'captured'
-                  ? 'bg-green-600 text-white cursor-not-allowed'
-                  : faceCapture.status === 'capturing'
-                  ? 'bg-yellow-500 text-white cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
-              }`}
-            >
-              {faceCapture.status === 'captured' ? 'Face Captured ✓' : 
-               faceCapture.status === 'capturing' ? 'Capturing...' : 
-               'Capture Face'}
-            </button>
+        )}
+        
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
+          {Object.entries(checks).map(([key, { status, message }]) => (
+            <div key={key} className="flex items-start gap-4 p-4 border-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition">
+              <div className="flex-shrink-0 mt-1">
+                {status === 'pass' ? (
+                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                ) : status === 'fail' ? (
+                  <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-blue-500 animate-pulse flex items-center justify-center">
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-gray-900 capitalize text-lg">{key}</div>
+                <div className="text-sm text-gray-600 mt-1">{message}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {showFaceCapture && (
+          <div className="space-y-6 p-6 border-2 border-blue-300 rounded-2xl bg-gradient-to-br from-blue-50 to-white">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Face Registration</h3>
+              <p className="text-gray-600">Position your face in the frame and capture</p>
+            </div>
             
-            {faceCapture.status === 'error' && (
+            <div className="relative">
+              {capturedImage ? (
+                <div className="relative rounded-2xl overflow-hidden border-4 border-green-400 shadow-xl">
+                  <img
+                    src={capturedImage}
+                    alt="Captured face"
+                    className="w-full h-80 object-cover bg-black"
+                  />
+                  <div className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Captured
+                  </div>
+                </div>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden border-4 border-gray-300 shadow-xl">
+                  <video
+                    ref={videoRef}
+                    playsInline
+                    muted
+                    className="w-full h-80 object-cover bg-black"
+                  />
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-4 border-blue-400 rounded-full opacity-50"></div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className={`flex items-center gap-4 p-4 rounded-xl ${
+              faceCapture.status === 'captured' ? 'bg-green-50 border-2 border-green-300' :
+              faceCapture.status === 'error' ? 'bg-red-50 border-2 border-red-300' :
+              faceCapture.status === 'capturing' ? 'bg-yellow-50 border-2 border-yellow-300' :
+              'bg-gray-50 border-2 border-gray-300'
+            }`}>
+              <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                faceCapture.status === 'captured' ? 'bg-green-500' :
+                faceCapture.status === 'error' ? 'bg-red-500' :
+                faceCapture.status === 'capturing' ? 'bg-yellow-500 animate-pulse' :
+                'bg-gray-400'
+              }`} />
+              <div className="flex-1 font-medium text-gray-700">{faceCapture.message}</div>
+            </div>
+            
+            <div className="flex gap-3">
               <button
-                onClick={() => {
-                  setCapturedImage(null);
-                  setFaceCapture({ status: 'idle', message: 'Position your face in the frame' });
-                }}
-                className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 font-bold transition"
+                onClick={captureFace}
+                disabled={faceCapture.status === 'capturing' || faceCapture.status === 'captured'}
+                className={`flex-1 py-4 px-6 rounded-xl font-bold text-lg transition transform hover:scale-105 ${
+                  faceCapture.status === 'captured'
+                    ? 'bg-green-600 text-white cursor-not-allowed opacity-75'
+                    : faceCapture.status === 'capturing'
+                    ? 'bg-yellow-500 text-white cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg'
+                }`}
               >
-                Retry
+                {faceCapture.status === 'captured' ? '✓ Face Captured' : 
+                 faceCapture.status === 'capturing' ? 'Capturing...' : 
+                 'Capture Face'}
               </button>
-            )}
+              
+              {faceCapture.status === 'error' && (
+                <button
+                  onClick={() => {
+                    setCapturedImage(null);
+                    setFaceCapture({ status: 'idle', message: 'Position your face in the frame' });
+                  }}
+                  className="px-6 py-4 bg-gray-600 text-white rounded-xl hover:bg-gray-700 font-bold text-lg transition shadow-lg transform hover:scale-105"
+                >
+                  Retry
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <button
-        onClick={onProceed}
-        disabled={!allPassed}
-        className={`w-full py-3 px-4 rounded-lg font-bold transition ${
-          allPassed
-            ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
-            : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-        }`}
-      >
-        {allPassed ? 'Proceed to Instructions' : 'Complete all checks to continue'}
-      </button>
+        <button
+          onClick={onProceed}
+          disabled={!allPassed}
+          className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition transform mt-8 ${
+            allPassed
+              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:scale-105'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {allPassed ? 'Continue to Instructions →' : 'Complete all checks to continue'}
+        </button>
+      </div>
     </div>
   );
 }

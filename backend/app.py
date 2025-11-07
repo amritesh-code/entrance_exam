@@ -6,7 +6,8 @@ from PIL import Image
 import io
 import time
 import mediapipe as mp
-
+import os
+import pickle
 app = FastAPI()
 
 app.add_middleware(
@@ -19,8 +20,9 @@ app.add_middleware(
 
 mp_face_detection = mp.solutions.face_detection
 mp_face_mesh = mp.solutions.face_mesh
-face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.3)
-face_mesh = mp_face_mesh.FaceMesh(max_num_faces=2, refine_landmarks=True, min_detection_confidence=0.2, min_tracking_confidence=0.2)
+face_mesh = mp_face_mesh.FaceMesh(max_num_faces=2, refine_landmarks=False, min_detection_confidence=0.5, min_tracking_confidence=0.5)
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 def load_image(contents):
     return cv2.cvtColor(np.array(Image.open(io.BytesIO(contents))), cv2.COLOR_BGR2RGB)
@@ -32,59 +34,38 @@ def root():
 @app.post("/detect")
 async def detect_faces(file: UploadFile = File(...)):
     image_rgb = load_image(await file.read())
-    results = face_detection.process(image_rgb)
-    
-    face_count = 0
-    confidence_scores = []
-    if results.detections:
-        face_count = len(results.detections)
-        confidence_scores = [d.score[0] for d in results.detections]
-    
+    gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.15, minNeighbors=5, minSize=(60, 60))
+    face_count = len(faces)
     flag = None
     if face_count == 0:
         flag = "no_face"
     elif face_count > 1:
         flag = "multiple_faces"
-    
-    print(f"Face detection: {face_count} faces, confidence: {confidence_scores}, flag: {flag}")
-    
-    return {
-        "faces": face_count,
-        "flag": flag,
-        "timestamp": int(time.time() * 1000)
-    }
+    print(f"[Haar] {face_count} faces, flag: {flag}")
+    return {"faces": face_count, "flag": flag, "timestamp": int(time.time() * 1000)}
 
 @app.post("/gaze")
 async def check_gaze(file: UploadFile = File(...)):
     image_rgb = load_image(await file.read())
     results = face_mesh.process(image_rgb)
-    
     if not results.multi_face_landmarks:
+        print("[Gaze] No face mesh")
         return {"gaze_valid": False, "deviation": None, "flag": "no_face_mesh", "timestamp": int(time.time() * 1000)}
-    
     landmarks = results.multi_face_landmarks[0].landmark
-    
     nose_tip = landmarks[1]
-    chin = landmarks[152]
-    left_eye = landmarks[33]
-    right_eye = landmarks[263]
-    left_mouth = landmarks[61]
-    right_mouth = landmarks[291]
-    
-    face_center_x = (left_eye.x + right_eye.x) / 2
-    face_center_y = (left_eye.y + right_eye.y) / 2
-    
+    left_eye_inner = landmarks[133]
+    right_eye_inner = landmarks[362]
+    left_eye_outer = landmarks[33]
+    right_eye_outer = landmarks[263]
+    face_center_x = (left_eye_inner.x + right_eye_inner.x + left_eye_outer.x + right_eye_outer.x) / 4
+    face_center_y = (left_eye_inner.y + right_eye_inner.y + left_eye_outer.y + right_eye_outer.y) / 4
     horizontal_deviation = abs(nose_tip.x - face_center_x) * 100
     vertical_deviation = abs(nose_tip.y - face_center_y) * 100
-    
-    mouth_center_x = (left_mouth.x + right_mouth.x) / 2
-    face_tilt = abs(mouth_center_x - face_center_x) * 100
-    
-    total_deviation = horizontal_deviation + vertical_deviation + face_tilt
-    
-    gaze_valid = total_deviation < 9
+    total_deviation = horizontal_deviation + vertical_deviation
+    gaze_valid = total_deviation < 12
     flag = None if gaze_valid else "gaze_away"
-    print(f"Gaze: h={horizontal_deviation:.1f}, v={vertical_deviation:.1f}, tilt={face_tilt:.1f}, total={total_deviation:.1f}, valid={gaze_valid}")
+    print(f"[Gaze] h={horizontal_deviation:.1f}, v={vertical_deviation:.1f}, dev={total_deviation:.1f}, ok={gaze_valid}")
     return {"gaze_valid": gaze_valid, "deviation": round(total_deviation, 2), "flag": flag, "timestamp": int(time.time() * 1000)}
 
 active_connections = {}
@@ -120,9 +101,6 @@ def check_connection_status(student_id: str):
 async def analyze_audio(file: UploadFile = File(...)):
     return {"message": "Audio analysis not yet implemented", "timestamp": int(time.time() * 1000)}
 
-import os
-import pickle
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 known_faces = {}
 training_dir = "trained_faces"
