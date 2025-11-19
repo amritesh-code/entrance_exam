@@ -31,7 +31,7 @@ export default function LoginView({ studentId, setStudentId, studentPass, setStu
           <input
             type="text"
             placeholder="Enter Your Student ID"
-            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
             required
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
@@ -40,7 +40,7 @@ export default function LoginView({ studentId, setStudentId, studentPass, setStu
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter Your Password"
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
               required
               value={studentPass}
               onChange={(e) => setStudentPass(e.target.value)}

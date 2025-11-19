@@ -20,7 +20,7 @@ export default function InstructionsView({ timer, startEnabled, onStart }) {
 
       <div className="mb-6">
         <p className="text-lg">The test will start in:</p>
-        <p className="text-5xl font-bold text-blue-600">
+        <p className="text-5xl font-bold text-purple-700">
           {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
         </p>
       </div>

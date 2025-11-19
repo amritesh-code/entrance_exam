@@ -1,0 +1,537 @@
+{
+  "sections": [
+    {
+      "id": "language-use",
+      "title": "Fill in the blanks (MCQs)",
+      "instructions": "Read each statement and speak the option that fits best.",
+      "questions": [
+        {
+          "id": "lu-1",
+          "prompt": "_____ sugar do you take in your tea?",
+          "delivery": "text",
+          "spokenText": "Blank sugar do you take in your tea?",
+          "options": [
+            { "key": "A", "text": "How much", "correct": true },
+            { "key": "B", "text": "How many" },
+            { "key": "C", "text": "What" },
+            { "key": "D", "text": "How long" }
+          ]
+        },
+        {
+          "id": "lu-2",
+          "prompt": "I ______ at 7am every morning.",
+          "delivery": "text",
+          "spokenText": "I blank at 7am every morning.",
+          "options": [
+            { "key": "A", "text": "breakfast eat" },
+            { "key": "B", "text": "eat breakfast", "correct": true },
+            { "key": "C", "text": "eating breakfast" },
+            { "key": "D", "text": "am eat breakfast" }
+          ]
+        },
+        {
+          "id": "lu-3",
+          "prompt": "_____ my friends came to the party.",
+          "delivery": "text",
+          "spokenText": "Blank my friends came to the party.",
+          "options": [
+            { "key": "A", "text": "Most of", "correct": true },
+            { "key": "B", "text": "The most" },
+            { "key": "C", "text": "Most" },
+            { "key": "D", "text": "Many" }
+          ]
+        },
+        {
+          "id": "lu-4",
+          "prompt": "I have _____ finished my homework, so I can play now.",
+          "delivery": "text",
+          "spokenText": "I have blank finished my homework, so I can play now.",
+          "options": [
+            { "key": "A", "text": "tomorrow" },
+            { "key": "B", "text": "next week" },
+            { "key": "C", "text": "yesterday" },
+            { "key": "D", "text": "already", "correct": true }
+          ]
+        },
+        {
+          "id": "lu-5",
+          "prompt": "I ______ outside.",
+          "delivery": "text",
+          "spokenText": "I blank outside.",
+          "options": [
+            { "key": "A", "text": "wanting to play" },
+            { "key": "B", "text": "want play" },
+            { "key": "C", "text": "want to play", "correct": true },
+            { "key": "D", "text": "am want to play" }
+          ]
+        },
+        {
+          "id": "lu-6",
+          "prompt": "Choose the correct sentence:",
+          "delivery": "tts",
+          "spokenText": "Choose the correct sentence.",
+          "options": [
+            { "key": "A", "text": "I play cricket on Monday.", "correct": true },
+            { "key": "B", "text": "I play cricket in Monday." },
+            { "key": "C", "text": "I play cricket at Monday." },
+            { "key": "D", "text": "I play cricket by Monday." }
+          ]
+        },
+        {
+          "id": "lu-7",
+          "prompt": "Which sentence uses 'during' correctly?",
+          "delivery": "tts",
+          "spokenText": "Which sentence uses during correctly?",
+          "options": [
+            { "key": "A", "text": "I brush my teeth during the morning." },
+            { "key": "B", "text": "I studying during weekend." },
+            { "key": "C", "text": "I take notes during class.", "correct": true },
+            { "key": "D", "text": "They were talking during yesterday." }
+          ]
+        },
+        {
+          "id": "lu-8",
+          "prompt": "Which sentence shows the WRONG way to use 'for'?",
+          "delivery": "tts",
+          "spokenText": "Which sentence shows the wrong way to use for?",
+          "options": [
+            { "key": "A", "text": "The movie lasted for two hours." },
+            { "key": "B", "text": "We have played football for five years." },
+            { "key": "C", "text": "They have been gone for Tuesday morning.", "correct": true },
+            { "key": "D", "text": "She has worked here for six months." }
+          ]
+        },
+        {
+          "id": "lu-9",
+          "prompt": "Which sentence shows the CORRECT use of 'from'?",
+          "delivery": "tts",
+          "spokenText": "Which sentence shows the correct use of from?",
+          "options": [
+            { "key": "A", "text": "They exercise from many years." },
+            { "key": "B", "text": "The movie plays from 7:00 PM until 9:00 PM.", "correct": true },
+            { "key": "C", "text": "She is reading from two hours." },
+            { "key": "D", "text": "We sleep from tired." }
+          ]
+        },
+        {
+          "id": "lu-10",
+          "prompt": "When we _____ at the park, it was warm and the sun ______.",
+          "delivery": "tts",
+          "spokenText": "When we blank at the park, it was warm and the sun blank.",
+          "options": [
+            { "key": "A", "text": "arrived ... was shining.", "correct": true },
+            { "key": "B", "text": "were arriving ... was shining." },
+            { "key": "C", "text": "reached ... shone." },
+            { "key": "D", "text": "arrive ... shines." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloze-passage",
+      "title": "Cloze Passage",
+      "instructions": "You will work with two short passages. When you see the passage on the left, read it carefully. The first question for each passage shows the text; the remaining blanks continue without re-displaying it.",
+      "references": [
+        {
+          "id": "community-garden",
+          "title": "Passage 1 – Starting a Community Garden",
+          "text": "Starting a community garden can have ___11___ advantages for neighborhoods. However, to ___12___ a successful garden, careful planning is essential.\n\nFirst, organizers must ___13___ permission from the local government to use the land. This process ___14___ patience and good communication skills.\n\nThe biggest ___15___ is getting people to ___16___ regularly. Everyone in the ___17___ should ___18___ time and effort to maintain the garden."
+        },
+        {
+          "id": "mozart-study",
+          "title": "Passage 2 – Does Mozart Make You Smarter?",
+          "text": "About twenty-five years ago, the results of an exciting new study were reported: If children listened to the music of Mozart, they ___19___ more intelligent. Immediately, huge numbers of Mozart CDs were purchased by people ___20___ wanted their children to be smarter. The statement was generally assumed to be true. After all, ___21___ people think Mozart was a genius, and maybe if we listened to his music, his intelligence ___22___ transfer to us.\n\nHowever, if you read about the experiment ___23___ led to this claim, there is little evidence it is true. Firstly, children ___24___ in the original experiment. University students were. The thirty-six young adults who took part did one of three things for ten minutes. Some sat in silence, ___25___ listened to relaxation instructions and a third group listened to Mozart's piano music. This experiment ___26___ three times. It was found that the students ___27___ to Mozart did better in the paper shapes activity than ___28___ students, but the effect only lasted about fifteen minutes.\n\nSince then, similar experiments have shown that listening to Mozart's music ___29___ lead to a temporary improvement in someone's ability to do spatial puzzles. There is ___30___ special about Mozart's music alone. ___31___ to other classical music, pop music and even stories can also wake up the brain. The effect is strongest if the listener likes the sound.\n\nSo, listening to Mozart will not harm your children. It could even lead to a love of classical music. But if they have an important test ahead, you ___32___ probably tell them to study instead."
+        }
+      ],
+      "questions": [
+        {
+          "id": "cloze-11",
+          "prompt": "Blank 11: Starting a community garden can have ____ advantages.",
+          "referenceId": "community-garden",
+          "options": [
+            { "key": "A", "text": "significant", "correct": true },
+            { "key": "B", "text": "minor" },
+            { "key": "C", "text": "imaginary" },
+            { "key": "D", "text": "seasonal" }
+          ]
+        },
+        {
+          "id": "cloze-12",
+          "prompt": "Blank 12: However, to _____ a successful garden, careful planning is essential.",
+          "options": [
+            { "key": "A", "text": "establish", "correct": true },
+            { "key": "B", "text": "abandon" },
+            { "key": "C", "text": "interrupt" },
+            { "key": "D", "text": "delay" }
+          ]
+        },
+        {
+          "id": "cloze-13",
+          "prompt": "Blank 13: Organizers must _____ permission from the local government.",
+          "options": [
+            { "key": "A", "text": "obtain", "correct": true },
+            { "key": "B", "text": "guess" },
+            { "key": "C", "text": "refuse" },
+            { "key": "D", "text": "forget" }
+          ]
+        },
+        {
+          "id": "cloze-14",
+          "prompt": "Blank 14: This process ______ patience and good communication skills.",
+          "options": [
+            { "key": "A", "text": "requires", "correct": true },
+            { "key": "B", "text": "avoids" },
+            { "key": "C", "text": "guesses" },
+            { "key": "D", "text": "forgets" }
+          ]
+        },
+        {
+          "id": "cloze-15",
+          "prompt": "Blank 15: The biggest _____ is getting people to help regularly.",
+          "options": [
+            { "key": "A", "text": "challenge", "correct": true },
+            { "key": "B", "text": "picnic" },
+            { "key": "C", "text": "holiday" },
+            { "key": "D", "text": "shortcut" }
+          ]
+        },
+        {
+          "id": "cloze-16",
+          "prompt": "Blank 16: The biggest challenge is getting people to _____ regularly.",
+          "options": [
+            { "key": "A", "text": "participate", "correct": true },
+            { "key": "B", "text": "complain" },
+            { "key": "C", "text": "vanish" },
+            { "key": "D", "text": "postpone" }
+          ]
+        },
+        {
+          "id": "cloze-17",
+          "prompt": "Blank 17: Everyone in the _____ should contribute.",
+          "options": [
+            { "key": "A", "text": "community", "correct": true },
+            { "key": "B", "text": "cupboard" },
+            { "key": "C", "text": "stadium" },
+            { "key": "D", "text": "corridor" }
+          ]
+        },
+        {
+          "id": "cloze-18",
+          "prompt": "Blank 18: Everyone should _____ time and effort to maintain the garden.",
+          "options": [
+            { "key": "A", "text": "contribute", "correct": true },
+            { "key": "B", "text": "withhold" },
+            { "key": "C", "text": "waste" },
+            { "key": "D", "text": "erase" }
+          ]
+        },
+        {
+          "id": "cloze-19",
+          "prompt": "Blank 19: If children listened to the music of Mozart, they _____ more intelligent.",
+          "referenceId": "mozart-study",
+          "options": [
+            { "key": "A", "text": "would become", "correct": true },
+            { "key": "B", "text": "were staying" },
+            { "key": "C", "text": "might remained" },
+            { "key": "D", "text": "could ignore" }
+          ]
+        },
+        {
+          "id": "cloze-20",
+          "prompt": "Blank 20: CDs were purchased by people _____ wanted their children to be smarter.",
+          "options": [
+            { "key": "A", "text": "who", "correct": true },
+            { "key": "B", "text": "where" },
+            { "key": "C", "text": "whom" },
+            { "key": "D", "text": "whenever" }
+          ]
+        },
+        {
+          "id": "cloze-21",
+          "prompt": "Blank 21: After all, _____ people think Mozart was a genius.",
+          "options": [
+            { "key": "A", "text": "most", "correct": true },
+            { "key": "B", "text": "fewer" },
+            { "key": "C", "text": "silent" },
+            { "key": "D", "text": "narrow" }
+          ]
+        },
+        {
+          "id": "cloze-22",
+          "prompt": "Blank 22: Maybe his intelligence _____ transfer to us.",
+          "options": [
+            { "key": "A", "text": "might", "correct": true },
+            { "key": "B", "text": "should" },
+            { "key": "C", "text": "rarely" },
+            { "key": "D", "text": "never" }
+          ]
+        },
+        {
+          "id": "cloze-23",
+          "prompt": "Blank 23: Read about the experiment _____ led to this claim.",
+          "options": [
+            { "key": "A", "text": "that", "correct": true },
+            { "key": "B", "text": "whose" },
+            { "key": "C", "text": "whenever" },
+            { "key": "D", "text": "where" }
+          ]
+        },
+        {
+          "id": "cloze-24",
+          "prompt": "Blank 24: Firstly, children _____ in the original experiment.",
+          "options": [
+            { "key": "A", "text": "were not tested", "correct": true },
+            { "key": "B", "text": "were always tested" },
+            { "key": "C", "text": "tested were" },
+            { "key": "D", "text": "are testing" }
+          ]
+        },
+        {
+          "id": "cloze-25",
+          "prompt": "Blank 25: Some students sat in silence, _____ listened to relaxation instructions.",
+          "options": [
+            { "key": "A", "text": "others", "correct": true },
+            { "key": "B", "text": "nobody" },
+            { "key": "C", "text": "cars" },
+            { "key": "D", "text": "mistakes" }
+          ]
+        },
+        {
+          "id": "cloze-26",
+          "prompt": "Blank 26: This experiment _____ three times.",
+          "options": [
+            { "key": "A", "text": "was repeated", "correct": true },
+            { "key": "B", "text": "will repeat" },
+            { "key": "C", "text": "expands" },
+            { "key": "D", "text": "is forgetting" }
+          ]
+        },
+        {
+          "id": "cloze-27",
+          "prompt": "Blank 27: Students _____ to Mozart did better on the task.",
+          "options": [
+            { "key": "A", "text": "who listened", "correct": true },
+            { "key": "B", "text": "if listen" },
+            { "key": "C", "text": "listening who" },
+            { "key": "D", "text": "listen why" }
+          ]
+        },
+        {
+          "id": "cloze-28",
+          "prompt": "Blank 28: They did better than _____ students.",
+          "options": [
+            { "key": "A", "text": "the other", "correct": true },
+            { "key": "B", "text": "side" },
+            { "key": "C", "text": "empty" },
+            { "key": "D", "text": "outer" }
+          ]
+        },
+        {
+          "id": "cloze-29",
+          "prompt": "Blank 29: Listening to Mozart's music _____ lead to a temporary improvement.",
+          "options": [
+            { "key": "A", "text": "can", "correct": true },
+            { "key": "B", "text": "won't" },
+            { "key": "C", "text": "sings" },
+            { "key": "D", "text": "destroys" }
+          ]
+        },
+        {
+          "id": "cloze-30",
+          "prompt": "Blank 30: There is _____ special about Mozart's music alone.",
+          "options": [
+            { "key": "A", "text": "nothing", "correct": true },
+            { "key": "B", "text": "everything" },
+            { "key": "C", "text": "nobody" },
+            { "key": "D", "text": "always" }
+          ]
+        },
+        {
+          "id": "cloze-31",
+          "prompt": "Blank 31: _____ to other classical music or pop songs can also wake up the brain.",
+          "options": [
+            { "key": "A", "text": "Listening", "correct": true },
+            { "key": "B", "text": "Driving" },
+            { "key": "C", "text": "Painting" },
+            { "key": "D", "text": "Clapping" }
+          ]
+        },
+        {
+          "id": "cloze-32",
+          "prompt": "Blank 32: You _____ probably tell them to study instead.",
+          "options": [
+            { "key": "A", "text": "should", "correct": true },
+            { "key": "B", "text": "rarely" },
+            { "key": "C", "text": "randomly" },
+            { "key": "D", "text": "hardly" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading-comprehension",
+      "title": "Reading Comprehension",
+      "instructions": "Each question is paired with a reference text. Read the passage on the right, then answer the question aloud.",
+      "references": [
+        {
+          "id": "airport-notice",
+          "title": "Text 1 – Airport Hand-Luggage Notice",
+          "text": "What can I take on the plane as hand luggage?\n\nPassengers can only take ONE suitcase onto the plane. It must be no bigger than 55cm x 22cm x 35cm and weigh no more than 10kg. You can also take one small laptop bag or handbag that can fit under the seat in front of you. If you have two bags, their total weight cannot be more than 10kg. If your bag is too big or too heavy, you will not be allowed to take it onto the plane. Staff will put it in the hold for you and you will have to pay extra.\n\nPlease make sure mobile phones and other devices are fully charged so that security staff can check them.\n\nLiquids in bottles bigger than 100ml are allowed on board if you buy them in the airport shops after you have passed security.\n\nWe hope you enjoy your flight!"
+        },
+        {
+          "id": "mysore-letter",
+          "title": "Text 2 – Letter from Shrivani in Mysore",
+          "text": "Hi! I am writing from Mysore. I visited Devaraja Market yesterday and bought beautiful handmade souvenirs like sandalwood figurines and colorful silk scarves. Last night I went to a traditional South Indian restaurant and tried Mysore masala dosa along with bisibele bhath. Both dishes were delicious and the spices were perfect. Today I climbed the thousand steps up Chamundi Hills. It was quite an adventure and my legs are still shaking, but the view was worth it. I am excited to visit Brindavan Gardens, the zoo, and Srirangapatna before I leave. I will be returning to Bangalore on Sunday next week, so I will call you then."
+        },
+        {
+          "id": "turtle-article",
+          "title": "Text 3 – How LED Lights Can Save Sea Turtles' Lives",
+          "text": "Sea turtles lay their eggs on the beach. When baby sea turtles, called hatchlings, come out of their eggs, they need to find the ocean quickly. They usually do this by following the natural light of the Moon and stars reflecting off the water. Hatchlings have special cells in their eyes called photoreceptors, which allow them to sense light and move toward the brightest area. Normally, the brightest light at night is the ocean's horizon, but in many places artificial lights from streets, buildings, and homes are much brighter than the Moon. These lights can confuse baby sea turtles and make it hard for them to find their way to the ocean. This causes them to crawl toward land, where they may get lost, dry out, or be eaten by animals. Only a small number survive if they do not reach the sea quickly.\n\nTechnology offers solutions. Turtle-friendly lights, placed low to the ground and covered so they cannot be seen from the beach, greatly reduce the number of hatchlings that get confused. These lights use long-wavelength colors such as red or amber, which hatchlings cannot see well. If you live near the coast, you can help by using lights that are not bright and by closing curtains at night.\n\nSea turtles have another enemy: fishing nets. Hundreds of thousands of these animals are caught in nets by accident, a problem called bycatch. Scientists discovered that turtles use their sight to find food, but underwater at night it is hard to see nets. Adding LED lights to nets makes them visible to turtles, reducing unwanted catches by 60% to 95% while keeping the amount of fish caught the same. LED lights also protect the nets from damage because fewer trapped animals bite or tear them. The lights are energy-efficient and last a long time, so fishermen save time and money."
+        }
+      ],
+      "questions": [
+        {
+          "id": "airport-1",
+          "prompt": "Who is the hand-luggage notice written for?",
+          "referenceId": "airport-notice",
+          "options": [
+            { "key": "A", "text": "Airline staff" },
+            { "key": "B", "text": "Passengers and travelers", "correct": true },
+            { "key": "C", "text": "Airport shop owners" }
+          ]
+        },
+        {
+          "id": "airport-2",
+          "prompt": "Where would people probably see this notice?",
+          "options": [
+            { "key": "A", "text": "On an airline website or booking email", "correct": true },
+            { "key": "B", "text": "In a science textbook" },
+            { "key": "C", "text": "Inside a restaurant menu" }
+          ]
+        },
+        {
+          "id": "airport-3",
+          "prompt": "What is the main purpose of the notice?",
+          "options": [
+            { "key": "A", "text": "To sell tickets" },
+            { "key": "B", "text": "To explain hand-luggage rules", "correct": true },
+            { "key": "C", "text": "To advertise airport shops" }
+          ]
+        },
+        {
+          "id": "airport-4",
+          "prompt": "Why does the notice repeat the word 'Please'?",
+          "options": [
+            { "key": "A", "text": "To sound polite and friendly", "correct": true },
+            { "key": "B", "text": "To threaten travelers" },
+            { "key": "C", "text": "To give military orders" }
+          ]
+        },
+        {
+          "id": "airport-5",
+          "prompt": "Why does the message end with 'We hope you enjoy your flight'?",
+          "options": [
+            { "key": "A", "text": "To sell extra tickets" },
+            { "key": "B", "text": "To end in a friendly way", "correct": true },
+            { "key": "C", "text": "To share safety alerts" }
+          ]
+        },
+        {
+          "id": "airport-6",
+          "prompt": "Can you bring a 150ml bottle of water from home onto the plane? Explain why or why not.",
+          "options": []
+        },
+        {
+          "id": "airport-7",
+          "prompt": "What will airport staff do if your suitcase is 60cm long?",
+          "options": []
+        },
+        {
+          "id": "airport-8",
+          "prompt": "Why must phones and devices stay fully charged before security checks?",
+          "options": []
+        },
+        {
+          "id": "mysore-1",
+          "prompt": "What handmade souvenirs did Shrivani buy at Devaraja Market?",
+          "referenceId": "mysore-letter",
+          "options": []
+        },
+        {
+          "id": "mysore-2",
+          "prompt": "Name the dishes Shrivani tried and describe her experience at the restaurant.",
+          "options": []
+        },
+        {
+          "id": "mysore-3",
+          "prompt": "When will Shrivani return to Bangalore and call her friend?",
+          "options": []
+        },
+        {
+          "id": "mysore-4",
+          "prompt": "How did Shrivani feel about climbing the thousand steps at Chamundi Hills?",
+          "options": []
+        },
+        {
+          "id": "mysore-5",
+          "prompt": "What do Shrivani's travel plans show about her interests?",
+          "options": []
+        },
+        {
+          "id": "turtles-1",
+          "prompt": "Explain how bright artificial lights near beaches can harm baby sea turtles.",
+          "referenceId": "turtle-article",
+          "options": []
+        },
+        {
+          "id": "turtles-2",
+          "prompt": "Describe how turtle-friendly lights help hatchlings find the ocean.",
+          "options": []
+        },
+        {
+          "id": "turtles-3",
+          "prompt": "What question would scientists ask before allowing a new beach light to be used near turtles?",
+          "options": []
+        },
+        {
+          "id": "turtles-4",
+          "prompt": "What does the term 'bycatch' mean, and why is it a problem for turtles and fishermen?",
+          "options": []
+        },
+        {
+          "id": "turtles-5",
+          "prompt": "How do LED lights on fishing nets reduce turtle bycatch without affecting the fish catch?",
+          "options": []
+        }
+      ]
+    },
+    {
+      "id": "speaking",
+      "title": "Speaking Test Prompts",
+      "instructions": "Use these cards for the short-talk portion. Read the cues, take a moment to plan, then speak for up to two minutes.",
+      "questions": [
+        {
+          "id": "speaking-1",
+          "prompt": "Short talk card – Your local area: Describe where you live, what you like or dislike about it, how people travel around, and one event you would invite a friend to attend.",
+          "delivery": "text",
+          "spokenText": "Speaking prompt: Talk about your local area, transport, likes, and an event you would invite a friend to.",
+          "options": []
+        },
+        {
+          "id": "speaking-2",
+          "prompt": "Short talk card – Helping your community: Explain one way you help at home or school, how it makes you feel, and why it is important for the community.",
+          "delivery": "text",
+          "spokenText": "Speaking prompt: Describe helping your community and why it matters.",
+          "options": []
+        },
+        {
+          "id": "speaking-3",
+          "prompt": "Short talk card – Someone you admire: Talk about a person you admire, what they do daily, and what you have learned from them.",
+          "delivery": "text",
+          "spokenText": "Speaking prompt: Describe someone you admire and what you learn from them.",
+          "options": []
+        }
+      ]
+    }
+  ]
+}
