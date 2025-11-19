@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { API_BASE_URL } from "../config.js";
 
 export default function CameraMonitor({
   onIncident,
@@ -6,7 +7,7 @@ export default function CameraMonitor({
   onStatus,
   snapshotIntervalMs=10000,
   useBackend=true,
-  backendUrl="http://localhost:8000"
+  backendUrl=API_BASE_URL
 }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);

@@ -1,2 +1,9 @@
 id,password,name,email
 admin,admin,Administrator,admin@adira.edu
+test1,test,Test Student One
+test2,test,Test Student Two
+test3,test,Test Student Three
+test4,test,Test Student Four
+test5,test,Test Student Five
+test6,test,Test Student Six
+test7,test,Test Student Seven

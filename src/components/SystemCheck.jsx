@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { API_BASE_URL } from '../config.js';
 
 export default function SystemCheck({ onProceed, studentId }) {
   const [checks, setChecks] = useState({
@@ -81,7 +82,7 @@ export default function SystemCheck({ onProceed, studentId }) {
         
         console.log('Sending face capture with student_id:', studentId);
         
-        const res = await fetch('http://localhost:8000/train_face', {
+        const res = await fetch(`${API_BASE_URL}/train_face`, {
           method: 'POST',
           body: formData
         });
@@ -112,7 +113,7 @@ export default function SystemCheck({ onProceed, studentId }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-violet-100 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">System Check</h2>
@@ -142,7 +143,7 @@ export default function SystemCheck({ onProceed, studentId }) {
                     </svg>
                   </div>
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-blue-500 animate-pulse flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-purple-500 animate-pulse flex items-center justify-center">
                     <div className="w-3 h-3 bg-white rounded-full"></div>
                   </div>
                 )}
@@ -156,7 +157,7 @@ export default function SystemCheck({ onProceed, studentId }) {
         </div>
 
         {showFaceCapture && (
-          <div className="space-y-6 p-6 border-2 border-blue-300 rounded-2xl bg-gradient-to-br from-blue-50 to-white">
+          <div className="space-y-6 p-6 border-2 border-purple-200 rounded-2xl bg-gradient-to-br from-purple-50 to-white">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Face Registration</h3>
               <p className="text-gray-600">Position your face in the frame and capture</p>
@@ -186,7 +187,7 @@ export default function SystemCheck({ onProceed, studentId }) {
                     className="w-full h-80 object-cover bg-black"
                   />
                   <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-4 border-blue-400 rounded-full opacity-50"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-4 border-purple-400 rounded-full opacity-50"></div>
                   </div>
                 </div>
               )}
@@ -216,7 +217,7 @@ export default function SystemCheck({ onProceed, studentId }) {
                     ? 'bg-green-600 text-white cursor-not-allowed opacity-75'
                     : faceCapture.status === 'capturing'
                     ? 'bg-yellow-500 text-white cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg'
+                    : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg'
                 }`}
               >
                 {faceCapture.status === 'captured' ? '✓ Face Captured' : 
@@ -244,7 +245,7 @@ export default function SystemCheck({ onProceed, studentId }) {
           disabled={!allPassed}
           className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition transform mt-8 ${
             allPassed
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:scale-105'
+              ? 'bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700 shadow-lg hover:scale-105'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
