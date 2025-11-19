@@ -8,12 +8,18 @@ __pycache__
 *$py.class
 *.so
 .Python
+*.egg
+*.egg-info/
 venv/
 env/
 ENV/
+backend/venv/
+backend/dist/
+backend/build/
 
 backend/trained_faces/
 backend/incident_logs/
+answer_scripts/
 
 *.log
 .env
