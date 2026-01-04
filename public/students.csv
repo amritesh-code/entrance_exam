@@ -1,9 +1,9 @@
-id,password,name,email
-admin,admin,Administrator,admin@adira.edu
-test1,test,Test Student One
-test2,test,Test Student Two
-test3,test,Test Student Three
-test4,test,Test Student Four
-test5,test,Test Student Five
-test6,test,Test Student Six
-test7,test,Test Student Seven
+id,password,name,email,exam_set,status
+admin,admin,Administrator,admin@adira.edu,,
+test1,test,Test Student One,,A,pending
+test2,test,Test Student Two,,A,pending
+test3,test,Test Student Three,,B,pending
+test4,test,Test Student Four,,B,pending
+test5,test,Test Student Five,,A,pending
+test6,test,Test Student Six,,B,pending
+test7,test,Test Student Seven,,A,pending
