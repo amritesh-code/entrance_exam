@@ -48,9 +48,9 @@ export default function LoginView({ studentId, setStudentId, studentPass, setStu
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 text-sm font-medium"
             >
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? "Hide" : "Show"}
             </button>
           </div>
           <button

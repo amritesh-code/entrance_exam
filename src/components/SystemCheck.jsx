@@ -122,7 +122,7 @@ export default function SystemCheck({ onProceed, studentId }) {
 
         {!studentId && (
           <div className="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded">
-            <p className="font-semibold">⚠️ Warning: Student ID is missing. Please log in again.</p>
+            <p className="font-semibold">Warning: Student ID is missing. Please log in again.</p>
           </div>
         )}
         
@@ -220,7 +220,7 @@ export default function SystemCheck({ onProceed, studentId }) {
                     : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg'
                 }`}
               >
-                {faceCapture.status === 'captured' ? '✓ Face Captured' : 
+                {faceCapture.status === 'captured' ? 'Face Captured' : 
                  faceCapture.status === 'capturing' ? 'Capturing...' : 
                  'Capture Face'}
               </button>

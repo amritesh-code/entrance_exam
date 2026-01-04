@@ -32,7 +32,6 @@ export default function App() {
   const closeWarning = () => setWarningModal(null);
   const navigateTo = (view) => setCurrentView(view);
 
-  // Custom hooks
   const examData = useExamData(studentExamSets.english, studentExamSets.maths);
   const proctoring = useProctoring(studentId);
   
@@ -46,7 +45,6 @@ export default function App() {
   const fullscreen = useFullscreen(showWarning, registerIncidentWithContext);
   const speech = useSpeechRecognition(showWarning);
 
-  // Reference handling
   const resolvedReferenceId = useMemo(() => {
     if (!examData.currentQuestion || !examData.activeSection) return null;
     const direct = examData.currentQuestion.referenceId;
@@ -82,7 +80,6 @@ export default function App() {
     }
   }, [resolvedReferenceId, referenceDefaultOpen, isReferencePanelOpen]);
 
-  // Section directions
   const activeSectionDirectionsSeen = examData.activeSection ? examData.sectionDirectionsSeen[examData.activeSection.id] : true;
   const showSectionDirections = Boolean(examData.activeSection && !activeSectionDirectionsSeen);
   const sectionDirectionsCopy = examData.activeSection?.instructions
@@ -94,12 +91,10 @@ export default function App() {
     examData.setSectionDirectionsSeen(prev => ({ ...prev, [examData.activeSection.id]: true }));
   };
 
-  // Audio tracking
   const currentSectionAudioMap = examData.activeSection ? examData.sectionAudioPlayed[examData.activeSection.id] || {} : {};
   const hasAudioPlayed = !!currentSectionAudioMap[examData.currentQuestionIndex];
   const activeSectionResults = examData.activeSection ? examData.sectionResults[examData.activeSection.id] || [] : [];
 
-  // Navigation
   const navigationLocked = speech.status === 'listening' || speech.status === 'evaluating';
   const disablePrev = !examData.previousQuestionTarget || navigationLocked;
   const disableNext = navigationLocked;
@@ -112,7 +107,6 @@ export default function App() {
     return 'Submit Exam';
   }, [examData.activeSection, examData.currentQuestionIndex, examData.totalQuestions, examData.isLastSection]);
 
-  // Effects
   useEffect(() => {
     if (currentView !== 'test') return;
     speech.setTranscript('...');
@@ -171,7 +165,6 @@ export default function App() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [currentView, fullscreen.handleFullscreenExit]);
 
-  // Actions
   const persistAnswerScript = async (entry) => {
     try {
       await fetch(`${API_BASE_URL}/save_answer`, {
@@ -296,30 +289,44 @@ export default function App() {
     examData.setActiveSectionId(sectionId);
   };
 
-  const handleAnswer = async (answer) => {
-    if (!examData.currentQuestion || !examData.activeSection) { speech.setStatus('ready'); return; }
+  const handleAnswer = async (answer, capturedSection, capturedQuestion, capturedQuestionIndex) => {
+    const section = capturedSection || examData.activeSection;
+    const question = capturedQuestion || examData.currentQuestion;
+    const questionIndex = capturedQuestionIndex ?? examData.currentQuestionIndex;
+    
+    if (!question || !section) { speech.setStatus('ready'); return; }
     speech.setStatus('evaluating');
-    const selectedOptionIndex = examData.selectedOptions[examData.activeSection.id]?.[examData.currentQuestionIndex];
-    const selectedOptionObj = selectedOptionIndex !== undefined && examData.currentQuestion.options 
-      ? examData.currentQuestion.options[selectedOptionIndex] : null;
-    const selectedOptionKey = selectedOptionObj?.key || null;
+    
+    const isMathsMCQ = section.subject === 'maths' && question.options?.length > 0;
+    let selectedOptionKey = null;
+    
+    if (isMathsMCQ) {
+      const selectedOptionIndex = examData.selectedOptions[section.id]?.[questionIndex];
+      const selectedOptionObj = selectedOptionIndex !== undefined ? question.options[selectedOptionIndex] : null;
+      selectedOptionKey = selectedOptionObj?.key || null;
+    }
     
     examData.setSectionResults((prev) => {
       const updated = { ...prev };
-      const sectionArray = [...(updated[examData.activeSection.id] || new Array(examData.activeSection.questions.length).fill(null))];
-      sectionArray[examData.currentQuestionIndex] = { questionId: examData.currentQuestion.id, prompt: examData.currentQuestion.prompt, selectedOption: selectedOptionKey, answer };
-      updated[examData.activeSection.id] = sectionArray;
+      const sectionArray = [...(updated[section.id] || new Array(section.questions.length).fill(null))];
+      sectionArray[questionIndex] = { 
+        questionId: question.id, 
+        prompt: question.prompt, 
+        selectedOption: selectedOptionKey, 
+        answer 
+      };
+      updated[section.id] = sectionArray;
       return updated;
     });
     
     await persistAnswerScript({
       student_id: studentId,
-      exam_set: examData.activeSection.examSet || 'A',
-      section_id: examData.activeSection.id,
-      section_title: examData.activeSection.title,
-      question_number: examData.currentQuestionIndex + 1,
-      question_id: examData.currentQuestion.id,
-      question_prompt: examData.currentQuestion.prompt,
+      exam_set: section.examSet || 'A',
+      section_id: section.id,
+      section_title: section.title,
+      question_number: questionIndex + 1,
+      question_id: question.id,
+      question_prompt: question.prompt,
       selected_option: selectedOptionKey,
       answer
     });
@@ -441,7 +448,12 @@ export default function App() {
                 question={examData.currentQuestion}
                 status={speech.status}
                 transcript={speech.transcript}
-                onStartRecording={() => speech.startListening(studentId, examData.activeSection, examData.currentQuestion, handleAnswer)}
+                onStartRecording={() => {
+                  const capturedSection = examData.activeSection;
+                  const capturedQuestion = examData.currentQuestion;
+                  const capturedIndex = examData.currentQuestionIndex;
+                  speech.startListening(studentId, capturedSection, capturedQuestion, (answer) => handleAnswer(answer, capturedSection, capturedQuestion, capturedIndex));
+                }}
                 onStopRecording={() => speech.stopAndSubmit(studentId, examData.activeSection, examData.currentQuestion)}
                 onPlayAudio={playAudio}
                 onPrevQuestion={handlePreviousQuestion}

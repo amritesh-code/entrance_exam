@@ -127,7 +127,6 @@ def grade_keyword_with_ai_fallback(answer: str, rubric_config: dict, question_pr
     if keyword_result["auto_score"] > 0:
         return keyword_result
     
-    # AI fallback with RAG - include passage context for better grading
     if groq_client and answer and len(answer.strip()) > 5:
         max_marks = rubric_config.get("max_marks", 1)
         ideas_desc = "\n".join([
@@ -135,7 +134,6 @@ def grade_keyword_with_ai_fallback(answer: str, rubric_config: dict, question_pr
             for idea in rubric_config.get("ideas", [])
         ])
         
-        # RAG: Include passage context if available
         context_section = ""
         if passage_context:
             context_section = f"""

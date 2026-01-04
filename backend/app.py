@@ -150,7 +150,6 @@ async def finish_exam(payload: FinishExamPayload):
     if not answers:
         return {"success": True, "message": "No answers to grade"}
     
-    # Cache loaded rubrics and question banks per subject+set
     rubric_cache = {}
     qb_cache = {}
     
@@ -182,7 +181,6 @@ async def finish_exam(payload: FinishExamPayload):
         exam_set = ans.get("exam_set", "A")
         exam_sets_used.add(f"{subject}:{exam_set}")
         
-        # Load correct rubric and question bank for this answer's subject+set
         rubric = get_rubric(subject, exam_set)
         question_bank = get_qb(subject, exam_set)
         
@@ -196,7 +194,6 @@ async def finish_exam(payload: FinishExamPayload):
             grade = grade_mcq(selected_option, correct_answer)
             result.update(grade)
         elif grading_type == "keyword":
-            # RAG: Retrieve passage context for better AI grading
             passage_context = get_passage_context(question_bank, section_id, question_id)
             grade = grade_keyword_with_ai_fallback(spoken_answer, question_rubric, question_prompt, passage_context)
             result.update(grade)

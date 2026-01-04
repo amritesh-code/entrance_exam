@@ -6,14 +6,12 @@ import mathsExamA from "../../QuestionBank/maths_exam.json";
 import mathsExamB from "../../QuestionBank/maths_exam_B.json";
 import mathsExamC from "../../QuestionBank/maths_exam_C.json";
 
-// Map exam sets to their question banks
 const englishExamSets = {
   A: englishExamA,
   B: englishExamB,
   C: englishExamC,
 };
 
-// Maths exam sets
 const mathsExamSets = {
   A: mathsExamA,
   B: mathsExamB,
@@ -21,7 +19,6 @@ const mathsExamSets = {
 };
 
 export function useExamData(englishSet = "A", mathsSet = "A") {
-  // Select the correct exams based on sets
   const englishExam = englishExamSets[englishSet] || englishExamA;
   const mathsExamData = mathsExamSets[mathsSet] || mathsExamA;
 

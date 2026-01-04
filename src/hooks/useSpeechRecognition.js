@@ -33,7 +33,6 @@ export function useSpeechRecognition(showWarning) {
         } catch {}
       }
 
-      // Start audio recording for speaking section
       const isSpeakingSection = activeSection?.id === "speaking";
       if (isSpeakingSection) {
         try {
@@ -138,7 +137,6 @@ export function useSpeechRecognition(showWarning) {
         recog.stop();
       } catch {}
 
-      // Stop and upload audio for speaking section
       if (mediaRecorderRef.current && activeSection?.id === "speaking") {
         const recorder = mediaRecorderRef.current;
         recorder.stop();
