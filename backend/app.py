@@ -150,13 +150,26 @@ async def finish_exam(payload: FinishExamPayload):
     if not answers:
         return {"success": True, "message": "No answers to grade"}
     
-    exam_set = answers[0].get("exam_set", "A")
-    rubric = load_rubric("english", exam_set)
-    question_bank = load_question_bank("english", exam_set)  # Load set-specific QB for RAG context
+    # Cache loaded rubrics and question banks per subject+set
+    rubric_cache = {}
+    qb_cache = {}
+    
+    def get_rubric(subject: str, exam_set: str):
+        key = f"{subject}_{exam_set}"
+        if key not in rubric_cache:
+            rubric_cache[key] = load_rubric(subject, exam_set)
+        return rubric_cache[key]
+    
+    def get_qb(subject: str, exam_set: str):
+        key = f"{subject}_{exam_set}"
+        if key not in qb_cache:
+            qb_cache[key] = load_question_bank(subject, exam_set)
+        return qb_cache[key]
     
     grading_results = []
     total_score = 0
     total_max = 0
+    exam_sets_used = set()
     
     for ans in answers:
         section_id = ans.get("section_id", "")
@@ -165,6 +178,13 @@ async def finish_exam(payload: FinishExamPayload):
         spoken_answer = ans.get("spoken_answer", "")
         correct_answer = ans.get("correct_answer", "")
         question_prompt = ans.get("question_prompt", "")
+        subject = ans.get("subject", "english")
+        exam_set = ans.get("exam_set", "A")
+        exam_sets_used.add(f"{subject}:{exam_set}")
+        
+        # Load correct rubric and question bank for this answer's subject+set
+        rubric = get_rubric(subject, exam_set)
+        question_bank = get_qb(subject, exam_set)
         
         section_rubric = rubric.get("sections", {}).get(section_id, {})
         question_rubric = section_rubric.get("questions", {}).get(question_id, {})
@@ -205,7 +225,7 @@ async def finish_exam(payload: FinishExamPayload):
     
     summary = {
         "student_id": student_id,
-        "exam_set": exam_set,
+        "exam_sets": list(exam_sets_used),
         "total_score": total_score,
         "total_max": total_max,
         "percentage": round((total_score / total_max * 100), 1) if total_max > 0 else 0,
