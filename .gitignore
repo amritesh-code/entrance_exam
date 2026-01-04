@@ -20,6 +20,7 @@ backend/build/
 backend/trained_faces/
 backend/incident_logs/
 answer_scripts/
+results/
 
 *.log
 .env
