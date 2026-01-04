@@ -2,7 +2,9 @@ import { useState, useMemo } from "react";
 import englishExamA from "../../QuestionBank/english_exam_A.json";
 import englishExamB from "../../QuestionBank/english_exam_B.json";
 import englishExamC from "../../QuestionBank/english_exam_C.json";
-import mathsExam from "../../QuestionBank/maths_exam.json";
+import mathsExamA from "../../QuestionBank/maths_exam.json";
+import mathsExamB from "../../QuestionBank/maths_exam_B.json";
+import mathsExamC from "../../QuestionBank/maths_exam_C.json";
 
 // Map exam sets to their question banks
 const englishExamSets = {
@@ -11,21 +13,31 @@ const englishExamSets = {
   C: englishExamC,
 };
 
-export function useExamData(examSet = "A") {
-  // Select the correct English exam based on set
-  const englishExam = englishExamSets[examSet] || englishExamA;
+// Maths exam sets
+const mathsExamSets = {
+  A: mathsExamA,
+  B: mathsExamB,
+  C: mathsExamC,
+};
+
+export function useExamData(englishSet = "A", mathsSet = "A") {
+  // Select the correct exams based on sets
+  const englishExam = englishExamSets[englishSet] || englishExamA;
+  const mathsExamData = mathsExamSets[mathsSet] || mathsExamA;
 
   const examSections = useMemo(() => {
     const englishSections = (englishExam.sections || []).map((s) => ({
       ...s,
       subject: "english",
+      examSet: englishSet,
     }));
-    const mathsSections = (mathsExam.sections || []).map((s) => ({
+    const mathsSections = (mathsExamData.sections || []).map((s) => ({
       ...s,
       subject: "maths",
+      examSet: mathsSet,
     }));
     return [...englishSections, ...mathsSections];
-  }, [englishExam]);
+  }, [englishExam, mathsExamData, englishSet, mathsSet]);
 
   const sectionReferenceMatrix = useMemo(() => {
     const matrix = {};

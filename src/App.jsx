@@ -18,7 +18,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState('login');
   const [studentId, setStudentId] = useState('');
   const [studentPass, setStudentPass] = useState('');
-  const [studentExamSet, setStudentExamSet] = useState('A');
+  const [studentExamSets, setStudentExamSets] = useState({ english: 'A', maths: 'A' });
   const [authError, setAuthError] = useState('');
   const [subjectTimers, setSubjectTimers] = useState({ english: 2700, maths: 2700 });
   const [startEnabled, setStartEnabled] = useState(false);
@@ -33,7 +33,7 @@ export default function App() {
   const navigateTo = (view) => setCurrentView(view);
 
   // Custom hooks
-  const examData = useExamData(studentExamSet);
+  const examData = useExamData(studentExamSets.english, studentExamSets.maths);
   const proctoring = useProctoring(studentId);
   
   const registerIncidentWithContext = (type, payload = {}) => {
@@ -314,7 +314,7 @@ export default function App() {
     
     await persistAnswerScript({
       student_id: studentId,
-      exam_set: studentExamSet,
+      exam_set: examData.activeSection.examSet || 'A',
       section_id: examData.activeSection.id,
       section_title: examData.activeSection.title,
       question_number: examData.currentQuestionIndex + 1,
@@ -356,14 +356,18 @@ export default function App() {
       const text = await res.text();
       const lines = text.trim().split('\n');
       const headers = lines[0].split(',');
-      const examSetIndex = headers.indexOf('exam_set');
+      const englishSetIndex = headers.indexOf('english_set');
+      const mathsSetIndex = headers.indexOf('maths_set');
       const match = lines.slice(1).find(row => {
         const cols = row.split(',');
         return cols[0] === studentId.trim() && cols[1] === studentPass.trim();
       });
       if (match) {
         const cols = match.split(',');
-        setStudentExamSet(examSetIndex >= 0 ? (cols[examSetIndex] || 'A') : 'A');
+        setStudentExamSets({
+          english: englishSetIndex >= 0 ? (cols[englishSetIndex] || 'A') : 'A',
+          maths: mathsSetIndex >= 0 ? (cols[mathsSetIndex] || 'A') : 'A'
+        });
         try {
           await fetch(`${API_BASE_URL}/start_exam`, {
             method: 'POST',
