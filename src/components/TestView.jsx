@@ -20,7 +20,12 @@ export default function TestView({
   isReferenceOpen,
   onToggleReferencePanel,
   referenceDisplayMode = 'none',
-  onPlayReferenceAudio
+  onPlayReferenceAudio,
+  showReferenceAudio = true,
+  isMathsQuestion = false,
+  savedAnswer,
+  selectedOption,
+  onSelectOption
 }) {
   const questionAvailable = Boolean(question);
   const promptText = question?.prompt || 'No question configured for this section yet.';
@@ -42,7 +47,7 @@ export default function TestView({
     }
     return 'Read the question, click the record button and respond aloud when ready.';
   })();
-  const transcriptText = transcript?.trim() || (questionAvailable
+  const transcriptText = transcript?.trim() || savedAnswer || (questionAvailable
     ? 'Waiting for your response...'
     : 'This section does not have questions yet.');
   const referenceParagraphs = hasReference
@@ -189,14 +194,44 @@ export default function TestView({
       <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-sm">
         <p className="text-sm font-semibold text-slate-900 mb-2">{questionAvailable ? 'Question' : 'No question available'}</p>
         <p className="text-base text-slate-900 leading-relaxed">{promptText}</p>
-        {question?.options?.length > 0 && (
+        {question?.options?.length > 0 && isMathsQuestion && (
+          <div className="mt-4 space-y-2">
+            {question.options.map((option, idx) => {
+              const optionText = typeof option === 'string' ? option : option.text;
+              const optionKey = typeof option === 'string' ? String.fromCharCode(65 + idx) : option.key;
+              return (
+                <button
+                  key={`${question.id || 'option'}-${idx}`}
+                  onClick={() => onSelectOption && onSelectOption(idx)}
+                  className={`w-full text-left px-4 py-3 rounded-lg border-2 transition ${
+                    selectedOption === idx
+                      ? 'border-purple-600 bg-purple-50 text-slate-900'
+                      : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex gap-3 items-start">
+                    <span className={`font-semibold min-w-[1.5rem] ${selectedOption === idx ? 'text-purple-600' : 'text-slate-600'}`}>
+                      {optionKey}.
+                    </span>
+                    <span className="flex-1">{optionText}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {question?.options?.length > 0 && !isMathsQuestion && (
           <ul className="mt-4 space-y-3 text-sm text-slate-800">
-            {question.options.map((option) => (
-              <li key={`${question.id || 'option'}-${option.key}`} className="flex gap-2">
-                <span className="font-semibold text-slate-600 min-w-[1.5rem]">{option.key}.</span>
-                <span>{option.text}</span>
-              </li>
-            ))}
+            {question.options.map((option, idx) => {
+              const optionText = typeof option === 'string' ? option : option.text;
+              const optionKey = typeof option === 'string' ? String.fromCharCode(65 + idx) : option.key;
+              return (
+                <li key={`${question.id || 'option'}-${idx}`} className="flex gap-2">
+                  <span className="font-semibold text-slate-600 min-w-[1.5rem]">{optionKey}.</span>
+                  <span>{optionText}</span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -233,15 +268,17 @@ export default function TestView({
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Reference Text</p>
           <h4 className="text-base font-semibold text-slate-900 mt-1">{referenceMaterial?.title || 'Passage'}</h4>
         </div>
-        <button
-          onClick={handlePlayReference}
-          className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition"
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-          </svg>
-          Play passage
-        </button>
+        {showReferenceAudio && (
+          <button
+            onClick={handlePlayReference}
+            className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+            Play passage
+          </button>
+        )}
       </div>
       {referencePanelOpen ? (
         <div className="mt-4 flex-1 overflow-y-auto">
@@ -273,15 +310,17 @@ export default function TestView({
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Reference Text</p>
           <h4 className="text-base font-semibold text-slate-900 mt-1">{referenceMaterial?.title || 'Passage'}</h4>
         </div>
-        <button
-          onClick={handlePlayReference}
-          className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition"
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-          </svg>
-          Play passage
-        </button>
+        {showReferenceAudio && (
+          <button
+            onClick={handlePlayReference}
+            className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+            Play passage
+          </button>
+        )}
       </div>
       <div className="mt-4 flex-1 overflow-y-auto">
         <div className="flex flex-col gap-3 text-sm text-slate-800 leading-7">
@@ -304,10 +343,10 @@ export default function TestView({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div>{anchoredReferencePanel}</div>
         <div className="space-y-5">
+          {navigationControls}
           {questionPanel}
           {recordingPanel}
           {transcriptPanel}
-          {navigationControls}
         </div>
       </div>
     );
@@ -320,9 +359,9 @@ export default function TestView({
         {isToggleMode && hasReference && referencePanel}
       </div>
       <div className="space-y-5">
+        {navigationControls}
         {recordingPanel}
         {transcriptPanel}
-        {navigationControls}
       </div>
     </div>
   );
