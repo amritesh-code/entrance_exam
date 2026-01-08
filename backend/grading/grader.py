@@ -30,6 +30,17 @@ def grade_keyword(answer: str, rubric_config: dict) -> dict:
     max_marks = rubric_config.get("max_marks", 1)
     feedback_parts = []
     
+    correct_option = rubric_config.get("correct_option", "").lower()
+    if correct_option:
+        wrong_options = [opt for opt in ["a", "b", "c", "d"] if opt != correct_option]
+        for wrong in wrong_options:
+            if f"option {wrong}" in answer_lower or f"letter {wrong}" in answer_lower or (f" {wrong} " in f" {answer_lower} " and len(wrong) == 1):
+                return {
+                    "auto_score": 0,
+                    "max_marks": max_marks,
+                    "feedback": f"Wrong option selected. Correct answer: {correct_option.upper()}"
+                }
+    
     for idea in rubric_config.get("ideas", []):
         idea_marks = idea.get("marks", 1)
         required_any = idea.get("required_any", [])

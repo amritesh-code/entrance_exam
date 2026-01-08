@@ -12,6 +12,10 @@ def load_rubric(subject: str, exam_set: str) -> dict:
     if rubric_file.exists():
         with open(rubric_file, "r", encoding="utf-8") as f:
             return json.load(f)
+    rubric_file = RUBRICS_DIR / f"{subject}_{exam_set}.json"
+    if rubric_file.exists():
+        with open(rubric_file, "r", encoding="utf-8") as f:
+            return json.load(f)
     return {}
 
 
@@ -23,6 +27,10 @@ def load_question_bank(subject: str, exam_set: Optional[str] = None) -> dict:
     """
     if exam_set:
         qb_file = QUESTION_BANK_DIR / f"{subject}_exam_{exam_set}.json"
+        if qb_file.exists():
+            with open(qb_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        qb_file = QUESTION_BANK_DIR / f"{subject}_{exam_set}.json"
         if qb_file.exists():
             with open(qb_file, "r", encoding="utf-8") as f:
                 return json.load(f)

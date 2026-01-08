@@ -17,7 +17,7 @@ def get_student_folder(student_id: str) -> Optional[Path]:
 
 
 def create_student_folder(student_id: str) -> Path:
-    timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d")
     folder = RESULTS_DIR / f"{student_id}_{timestamp}"
     folder.mkdir(parents=True, exist_ok=True)
     return folder
@@ -57,7 +57,7 @@ def save_answer_row(folder: Path, data: dict):
             data.get("question_number", ""),
             data.get("question_prompt", ""),
             data.get("correct_answer", ""),
-            data.get("selected_option", ""),
+            data.get("selected_option", "") if data.get("subject") == "maths" else "",
             data.get("spoken_answer", "")
         ])
 
