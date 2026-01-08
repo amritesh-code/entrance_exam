@@ -5,6 +5,7 @@ const PROCTOR_INTERVAL_MS = 2500;
 const SNAPSHOT_INTERVAL_MS = 10000;
 const INCIDENT_COOLDOWN_MS = 8000;
 const NO_FACE_THRESHOLD = 2;
+const MULTIPLE_FACE_THRESHOLD = 2;
 const GAZE_THRESHOLD = 1;
 
 export default function CameraMonitor({
@@ -23,6 +24,7 @@ export default function CameraMonitor({
   const [active, setActive] = useState(false);
   
   const consecutiveNoFaceRef = useRef(0);
+  const consecutiveMultipleFacesRef = useRef(0);
   const consecutiveGazeAwayRef = useRef(0);
   const lastIncidentTimeRef = useRef({});
 
@@ -111,6 +113,7 @@ export default function CameraMonitor({
         
         if (data.faces === 0) {
           consecutiveNoFaceRef.current++;
+          consecutiveMultipleFacesRef.current = 0;
           consecutiveGazeAwayRef.current = 0;
           setGazeStatus(null);
           if (consecutiveNoFaceRef.current >= NO_FACE_THRESHOLD && canTriggerIncident("no_face")) {
@@ -118,13 +121,15 @@ export default function CameraMonitor({
           }
         } else if (data.faces > 1) {
           consecutiveNoFaceRef.current = 0;
+          consecutiveMultipleFacesRef.current++;
           consecutiveGazeAwayRef.current = 0;
           setGazeStatus(null);
-          if (canTriggerIncident("multiple_faces")) {
+          if (consecutiveMultipleFacesRef.current >= MULTIPLE_FACE_THRESHOLD && canTriggerIncident("multiple_faces")) {
             onIncident?.("multiple_faces", { ts: data.timestamp, count: data.faces });
           }
         } else {
           consecutiveNoFaceRef.current = 0;
+          consecutiveMultipleFacesRef.current = 0;
           if (data.flag === "gaze_away") {
             consecutiveGazeAwayRef.current++;
             setGazeStatus("away");

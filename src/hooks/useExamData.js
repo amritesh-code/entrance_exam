@@ -2,20 +2,24 @@ import { useState, useMemo } from "react";
 import englishExamA from "../../QuestionBank/english_exam_A.json";
 import englishExamB from "../../QuestionBank/english_exam_B.json";
 import englishExamC from "../../QuestionBank/english_exam_C.json";
+import englishDemo from "../../QuestionBank/english_demo.json";
 import mathsExamA from "../../QuestionBank/maths_exam.json";
 import mathsExamB from "../../QuestionBank/maths_exam_B.json";
 import mathsExamC from "../../QuestionBank/maths_exam_C.json";
+import mathsDemo from "../../QuestionBank/maths_demo.json";
 
 const englishExamSets = {
   A: englishExamA,
   B: englishExamB,
   C: englishExamC,
+  demo: englishDemo,
 };
 
 const mathsExamSets = {
   A: mathsExamA,
   B: mathsExamB,
   C: mathsExamC,
+  demo: mathsDemo,
 };
 
 export function useExamData(englishSet = "A", mathsSet = "A") {

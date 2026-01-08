@@ -5,7 +5,6 @@ export default function ExamHeader({
   activeSubject,
   subjectTimers,
   fullscreenWarningCount,
-  onEnterFullscreen,
   onEndExam
 }) {
   const formatTime = (seconds) => {
@@ -23,19 +22,13 @@ export default function ExamHeader({
       <div className="flex-1"></div>
       <div className="flex items-center gap-4">
         <span className="text-base font-medium text-white">
-          {activeSubject.charAt(0).toUpperCase() + activeSubject.slice(1)} Time: {formatTime(subjectTimers[activeSubject])}
+          {formatTime(subjectTimers[activeSubject])}
         </span>
         {fullscreenWarningCount > 0 && (
           <span className="text-sm font-semibold text-yellow-200">
             Fullscreen warning {fullscreenWarningCount}/2
           </span>
         )}
-        <button
-          onClick={onEnterFullscreen}
-          className="bg-transparent border border-white/70 text-white px-4 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-700 transition"
-        >
-          Fullscreen
-        </button>
         <button
           onClick={onEndExam}
           className="bg-white text-purple-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"

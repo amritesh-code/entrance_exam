@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../config.js";
 
 export function useSpeechRecognition(showWarning) {
   const [status, setStatus] = useState(null);
-  const [transcript, setTranscript] = useState("...");
+  const [transcript, setTranscript] = useState("");
 
   const SpeechRecognitionClass = useMemo(
     () => window.SpeechRecognition || window.webkitSpeechRecognition || null,
@@ -61,13 +61,15 @@ export function useSpeechRecognition(showWarning) {
       listeningRef.current = true;
       stopRequestedRef.current = false;
       capturedRef.current = "";
+      let answeredRef = false;
       setTranscript("");
       setStatus("listening");
 
       let handled = false;
       const timeoutId = setTimeout(() => {
-        if (handled) return;
+        if (handled || answeredRef) return;
         handled = true;
+        answeredRef = true;
         try {
           recog.stop();
         } catch {}
@@ -88,13 +90,16 @@ export function useSpeechRecognition(showWarning) {
 
       recog.onend = () => {
         listeningRef.current = false;
+        if (answeredRef) return;
         if (stopRequestedRef.current) {
+          answeredRef = true;
           const finalText = (capturedRef.current || "").trim();
           onAnswer(finalText || "");
           return;
         }
         if (!handled) {
           handled = true;
+          answeredRef = true;
           clearTimeout(timeoutId);
           setStatus("idle");
           onAnswer(capturedRef.current || "");

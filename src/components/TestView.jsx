@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+const SPEAKING_TIME_LIMIT = 120;
 
 export default function TestView({
   questionIndex,
@@ -25,8 +27,54 @@ export default function TestView({
   isMathsQuestion = false,
   savedAnswer,
   selectedOption,
-  onSelectOption
+  onSelectOption,
+  isSpeakingSection = false
 }) {
+  const [speakingTimer, setSpeakingTimer] = useState(SPEAKING_TIME_LIMIT);
+  const timerIntervalRef = useRef(null);
+  const onStopRecordingRef = useRef(onStopRecording);
+
+  useEffect(() => {
+    onStopRecordingRef.current = onStopRecording;
+  }, [onStopRecording]);
+
+  useEffect(() => {
+    if (isSpeakingSection && status === 'listening') {
+      setSpeakingTimer(SPEAKING_TIME_LIMIT);
+      timerIntervalRef.current = setInterval(() => {
+        setSpeakingTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(timerIntervalRef.current);
+            if (onStopRecordingRef.current) {
+              onStopRecordingRef.current();
+            }
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      if (status === 'ready') {
+        setSpeakingTimer(SPEAKING_TIME_LIMIT);
+      }
+    }
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isSpeakingSection, status]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  };
+
   const questionAvailable = Boolean(question);
   const promptText = question?.prompt || 'No question configured for this section yet.';
   const positionLabel = totalQuestions
@@ -47,9 +95,12 @@ export default function TestView({
     }
     return 'Read the question, click the record button and respond aloud when ready.';
   })();
-  const transcriptText = transcript?.trim() || savedAnswer || (questionAvailable
-    ? 'Waiting for your response...'
-    : 'This section does not have questions yet.');
+  const transcriptText = (() => {
+    if (transcript?.trim()) return transcript.trim();
+    if (savedAnswer) return savedAnswer;
+    if (!questionAvailable) return 'This section does not have questions yet.';
+    return 'Waiting for your response...';
+  })();
   const referenceParagraphs = hasReference
     ? (referenceMaterial?.text || '')
         .split(/\n\s*\n/)
@@ -68,7 +119,9 @@ export default function TestView({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-slate-900">Record your answer</p>
-          <p className="text-xs text-slate-500">Use the microphone when you are ready.</p>
+          <p className="text-xs text-slate-500">
+            {isSpeakingSection ? 'Speak for up to 2 minutes on the topic.' : 'Use the microphone when you are ready.'}
+          </p>
         </div>
         {questionAvailable && status === 'ready' && (
           <button
@@ -82,15 +135,31 @@ export default function TestView({
           </button>
         )}
         {status === 'listening' && (
-          <button
-            onClick={onStopRecording}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition"
-          >
-            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-            Stop
-          </button>
+          <div className="flex items-center gap-3">
+            {isSpeakingSection && (
+              <div className={`px-3 py-1 rounded-full text-sm font-bold ${speakingTimer <= 30 ? 'bg-red-100 text-red-600' : 'bg-purple-100 text-purple-600'}`}>
+                {formatTime(speakingTimer)}
+              </div>
+            )}
+            <button
+              onClick={onStopRecording}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition"
+            >
+              <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+              Stop
+            </button>
+          </div>
         )}
       </div>
+
+      {isSpeakingSection && status === 'ready' && (
+        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-800">
+          <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>You have <strong>2 minutes</strong> to speak on this topic. The timer will start when you click Record.</span>
+        </div>
+      )}
 
       {!questionAvailable && (
         <div className="p-3 bg-yellow-50 border border-yellow-100 rounded-lg text-sm text-yellow-800">

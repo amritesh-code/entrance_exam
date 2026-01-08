@@ -109,7 +109,7 @@ export default function App() {
 
   useEffect(() => {
     if (currentView !== 'test') return;
-    speech.setTranscript('...');
+    speech.setTranscript('');
     speech.setStatus('ready');
   }, [currentView, examData.currentQuestionIndex, examData.activeSectionId]);
 
@@ -417,7 +417,6 @@ export default function App() {
             activeSubject={examData.activeSubject}
             subjectTimers={subjectTimers}
             fullscreenWarningCount={fullscreen.fullscreenWarningCount}
-            onEnterFullscreen={() => fullscreen.enterFullscreen(false, true)}
             onEndExam={finishTest}
           />
           <div className="flex bg-white">
@@ -470,6 +469,7 @@ export default function App() {
                 onPlayReferenceAudio={playReferenceAudio}
                 showReferenceAudio={examData.activeSection?.id !== 'cloze-passage' && examData.activeSection?.id !== 'reading-comprehension'}
                 isMathsQuestion={examData.activeSection?.subject === 'maths'}
+                isSpeakingSection={examData.activeSection?.id === 'speaking'}
                 savedAnswer={activeSectionResults[examData.currentQuestionIndex]?.answer || null}
                 selectedOption={examData.activeSection && examData.currentQuestion ? examData.selectedOptions[examData.activeSection.id]?.[examData.currentQuestionIndex] : null}
                 onSelectOption={(optionIndex) => {

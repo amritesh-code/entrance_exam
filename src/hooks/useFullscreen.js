@@ -4,6 +4,7 @@ export function useFullscreen(showWarning, registerIncident) {
   const [fullscreenWarningCount, setFullscreenWarningCount] = useState(0);
   const fullscreenWarningCountRef = useRef(0);
   const endingSessionRef = useRef(false);
+  const lastExitTimeRef = useRef(0);
 
   const enterFullscreen = useCallback(
     async (resetCount = false, logFailure = false) => {
@@ -53,6 +54,10 @@ export function useFullscreen(showWarning, registerIncident) {
       if (endingSessionRef.current) return;
       if (document.fullscreenElement) return;
 
+      const now = Date.now();
+      if (now - lastExitTimeRef.current < 2000) return;
+      lastExitTimeRef.current = now;
+
       const next = fullscreenWarningCountRef.current + 1;
       fullscreenWarningCountRef.current = next;
       setFullscreenWarningCount(next);
@@ -72,7 +77,7 @@ export function useFullscreen(showWarning, registerIncident) {
           "Fullscreen warning",
           `Return to fullscreen to continue. Warning ${next}/2.`
         );
-        enterFullscreen(false);
+        setTimeout(() => enterFullscreen(false), 500);
       }
     },
     [enterFullscreen, registerIncident, showWarning]
