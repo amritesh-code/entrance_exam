@@ -22,6 +22,14 @@ backend/incident_logs/
 answer_scripts/
 results/
 
+# Question banks (sensitive exam content)
+QuestionBank/
+rubrics/
+
+# Sensitive docs
+*.md
+!README.md
+
 *.log
 .env
 .env.local

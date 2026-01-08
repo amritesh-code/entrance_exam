@@ -1,6 +1,6 @@
 id,password,name,email,english_set,maths_set,status
 admin,admin,Administrator,admin@adira.edu,,,
-test1,test,Test Student One,,A,B,pending
+Demo,test,Demo Student,,demo,demo,pending
 test2,test,Test Student Two,,B,B,pending
 test3,test,Test Student Three,,C,C,pending
 test4,test,Test Student Four,,A,B,pending
