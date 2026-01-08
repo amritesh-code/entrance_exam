@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { API_BASE_URL } from "../config.js";
 
 export function useSpeechRecognition(showWarning) {
@@ -9,12 +9,90 @@ export function useSpeechRecognition(showWarning) {
     () => window.SpeechRecognition || window.webkitSpeechRecognition || null,
     []
   );
+
   const recognitionRef = useRef(null);
   const listeningRef = useRef(false);
   const capturedRef = useRef("");
   const stopRequestedRef = useRef(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const timeoutIdRef = useRef(null);
+  const answeredRef = useRef(false);
+  const watchdogRef = useRef(null);
+  const lastActivityRef = useRef(Date.now());
+  const restartFnRef = useRef(null);
+  const onAnswerRef = useRef(null);
+
+  useEffect(() => {
+    restartFnRef.current = () => {
+      if (stopRequestedRef.current || answeredRef.current) return;
+
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {}
+        recognitionRef.current = null;
+      }
+
+      if (!SpeechRecognitionClass) return;
+
+      const recog = new SpeechRecognitionClass();
+      recog.continuous = true;
+      recog.lang = "en-IN";
+      recog.interimResults = true;
+      recog.maxAlternatives = 1;
+
+      recognitionRef.current = recog;
+      const previousText = capturedRef.current;
+      lastActivityRef.current = Date.now();
+
+      recog.onresult = (event) => {
+        lastActivityRef.current = Date.now();
+        let currentSession = "";
+        for (let i = 0; i < event.results.length; i++) {
+          currentSession += event.results[i][0].transcript;
+        }
+        const fullText = previousText
+          ? `${previousText} ${currentSession}`
+          : currentSession;
+        capturedRef.current = fullText;
+        setTranscript(fullText.trim());
+      };
+
+      recog.onend = () => {
+        if (answeredRef.current || stopRequestedRef.current) return;
+        recognitionRef.current = null;
+        setTimeout(() => restartFnRef.current?.(), 50);
+      };
+
+      recog.onerror = (e) => {
+        if (answeredRef.current || stopRequestedRef.current) return;
+        // For "no-speech" or "aborted" errors, restart quickly
+        recognitionRef.current = null;
+        setTimeout(() => restartFnRef.current?.(), 50);
+      };
+
+      try {
+        recog.start();
+        listeningRef.current = true;
+      } catch (err) {
+        recognitionRef.current = null;
+        setTimeout(() => restartFnRef.current?.(), 50);
+      }
+    };
+  }, [SpeechRecognitionClass]);
+
+  useEffect(() => {
+    return () => {
+      if (watchdogRef.current) clearInterval(watchdogRef.current);
+      if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {}
+      }
+    };
+  }, []);
 
   const startListening = useCallback(
     async (studentId, activeSection, currentQuestion, onAnswer) => {
@@ -27,11 +105,14 @@ export function useSpeechRecognition(showWarning) {
         onAnswer("");
         return;
       }
-      if (listeningRef.current && recognitionRef.current) {
+
+      if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
         } catch {}
       }
+      if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+      if (watchdogRef.current) clearInterval(watchdogRef.current);
 
       const isSpeakingSection = activeSection?.id === "speaking";
       if (isSpeakingSection) {
@@ -46,103 +127,69 @@ export function useSpeechRecognition(showWarning) {
           mediaRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) audioChunksRef.current.push(e.data);
           };
-          mediaRecorder.start();
+          mediaRecorder.start(1000);
           mediaRecorderRef.current = mediaRecorder;
-        } catch (e) {
-          console.error("Failed to start audio recording", e);
-        }
+        } catch {}
       }
 
-      const recog = new SpeechRecognitionClass();
-      recog.continuous = true;
-      recog.lang = "en-IN";
-      recog.interimResults = true;
-      recognitionRef.current = recog;
-      listeningRef.current = true;
       stopRequestedRef.current = false;
+      answeredRef.current = false;
       capturedRef.current = "";
-      let answeredRef = false;
+      lastActivityRef.current = Date.now();
+      onAnswerRef.current = onAnswer;
       setTranscript("");
       setStatus("listening");
 
-      let handled = false;
-      const timeoutId = setTimeout(() => {
-        if (handled || answeredRef) return;
-        handled = true;
-        answeredRef = true;
-        try {
-          recog.stop();
-        } catch {}
-        setStatus("idle");
-        onAnswer(capturedRef.current || "");
+      timeoutIdRef.current = setTimeout(() => {
+        if (answeredRef.current) return;
+        answeredRef.current = true;
+        stopRequestedRef.current = true;
+        if (watchdogRef.current) clearInterval(watchdogRef.current);
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch {}
+        }
+        // handleAnswer will manage status (evaluating -> ready)
+        if (onAnswerRef.current) {
+          onAnswerRef.current(capturedRef.current || "");
+          onAnswerRef.current = null;
+        } else {
+          setStatus("ready");
+        }
       }, 120000);
 
-      recog.onresult = (event) => {
-        let full = "";
-        for (let i = 0; i < event.results.length; i++) {
-          full += event.results[i][0].transcript;
-        }
-        capturedRef.current = full;
-        setTranscript(full.trim());
-      };
+      restartFnRef.current?.();
 
-      recog.onspeechend = () => {};
-
-      recog.onend = () => {
-        listeningRef.current = false;
-        if (answeredRef) return;
-        if (stopRequestedRef.current) {
-          answeredRef = true;
-          const finalText = (capturedRef.current || "").trim();
-          onAnswer(finalText || "");
+      watchdogRef.current = setInterval(() => {
+        if (stopRequestedRef.current || answeredRef.current) {
+          clearInterval(watchdogRef.current);
           return;
         }
-        if (!handled) {
-          handled = true;
-          answeredRef = true;
-          clearTimeout(timeoutId);
-          setStatus("idle");
-          onAnswer(capturedRef.current || "");
+        if (Date.now() - lastActivityRef.current > 8000) {
+          lastActivityRef.current = Date.now();
+          restartFnRef.current?.();
         }
-      };
-
-      recog.onerror = (event) => {
-        if (handled) return;
-        if (event.error === "aborted" || event.error === "no-speech") return;
-        handled = true;
-        clearTimeout(timeoutId);
-        setStatus("error");
-        try {
-          recog.abort();
-        } catch {}
-        onAnswer("");
-      };
-
-      try {
-        recog.start();
-      } catch (e) {
-        try {
-          recog.abort();
-        } catch (_) {}
-        try {
-          recog.start();
-        } catch (_) {}
-      }
+      }, 3000);
     },
     [SpeechRecognitionClass, showWarning]
   );
 
   const stopAndSubmit = useCallback(
     async (studentId, activeSection, currentQuestion) => {
-      const recog = recognitionRef.current;
-      if (!recog) return;
       stopRequestedRef.current = true;
-      setStatus("evaluating");
-      try {
-        recog.stop();
-      } catch {}
+      answeredRef.current = true;
+
+      if (watchdogRef.current) clearInterval(watchdogRef.current);
+      if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
 
       if (mediaRecorderRef.current && activeSection?.id === "speaking") {
+        setStatus("evaluating");
         const recorder = mediaRecorderRef.current;
         recorder.stop();
 
@@ -158,26 +205,35 @@ export function useSpeechRecognition(showWarning) {
           formData.append("file", audioBlob, "speaking.webm");
           formData.append("student_id", studentId);
           formData.append("question_id", currentQuestion?.id || "speaking");
-
-          try {
-            await fetch(`${API_BASE_URL}/save_audio`, {
-              method: "POST",
-              body: formData,
-            });
-          } catch (e) {
-            console.error("Failed to upload audio", e);
-          }
+          fetch(`${API_BASE_URL}/save_audio`, {
+            method: "POST",
+            body: formData,
+          });
         }
 
         recorder.stream?.getTracks().forEach((track) => track.stop());
         mediaRecorderRef.current = null;
         audioChunksRef.current = [];
       }
+
+      // Call the onAnswer callback with captured transcript
+      // handleAnswer will manage status (evaluating -> ready)
+      if (onAnswerRef.current) {
+        onAnswerRef.current(capturedRef.current || "");
+        onAnswerRef.current = null;
+      } else {
+        // No callback - just set to ready so user can re-record
+        setStatus("ready");
+      }
     },
     []
   );
 
   const cleanup = useCallback(() => {
+    stopRequestedRef.current = true;
+    answeredRef.current = true;
+    if (watchdogRef.current) clearInterval(watchdogRef.current);
+    if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.abort();

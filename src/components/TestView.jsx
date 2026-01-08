@@ -203,7 +203,7 @@ export default function TestView({
         <p className="text-sm font-semibold text-slate-900">Your answer</p>
         <span className="text-xs text-slate-400">Auto-transcribed</span>
       </div>
-      <div className="min-h-[90px] text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl p-3">
+      <div className="min-h-[90px] max-h-[200px] overflow-y-auto text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl p-3">
         {transcriptText}
       </div>
     </div>

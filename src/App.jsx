@@ -319,17 +319,21 @@ export default function App() {
       return updated;
     });
     
-    await persistAnswerScript({
-      student_id: studentId,
-      exam_set: section.examSet || 'A',
-      section_id: section.id,
-      section_title: section.title,
-      question_number: questionIndex + 1,
-      question_id: question.id,
-      question_prompt: question.prompt,
-      selected_option: selectedOptionKey,
-      answer
-    });
+    try {
+      await persistAnswerScript({
+        student_id: studentId,
+        exam_set: section.examSet || 'A',
+        section_id: section.id,
+        section_title: section.title,
+        question_number: questionIndex + 1,
+        question_id: question.id,
+        question_prompt: question.prompt,
+        selected_option: selectedOptionKey,
+        answer
+      });
+    } catch (err) {
+      console.error('Failed to persist answer:', err);
+    }
     speech.setStatus('ready');
   };
 

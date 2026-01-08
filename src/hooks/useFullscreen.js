@@ -77,7 +77,7 @@ export function useFullscreen(showWarning, registerIncident) {
           "Fullscreen warning",
           `Return to fullscreen to continue. Warning ${next}/2.`
         );
-        setTimeout(() => enterFullscreen(false), 500);
+        setTimeout(() => enterFullscreen(false), 1500);
       }
     },
     [enterFullscreen, registerIncident, showWarning]
