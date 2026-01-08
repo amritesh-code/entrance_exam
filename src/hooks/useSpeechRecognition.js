@@ -55,7 +55,7 @@ export function useSpeechRecognition(showWarning) {
 
       const recog = new SpeechRecognitionClass();
       recog.continuous = true;
-      recog.lang = "en-US";
+      recog.lang = "en-IN";
       recog.interimResults = true;
       recognitionRef.current = recog;
       listeningRef.current = true;
